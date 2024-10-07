@@ -13,6 +13,19 @@ const Tab = createBottomTabNavigator();
 const BottomNavigation: React.FC = () => {
   return (
     <Tab.Navigator>
+        <Tab.Screen 
+        name="Menu"
+        component={Menu}
+        options={{
+          headerShown: false,
+          title: 'Menu',
+          tabBarIcon: ({ size, focused, color }: { size: number; focused: boolean; color: string }) => {
+            return (
+              <Image style={{ width: size, height: size }} source={Icons.menu} />
+            );
+          },
+        }}
+      />
       <Tab.Screen 
         name="Home"
         component={Home}
@@ -49,19 +62,7 @@ const BottomNavigation: React.FC = () => {
           },
         }}
       />
-      <Tab.Screen 
-        name="Menu"
-        component={Menu}
-        options={{
-          headerShown: false,
-          title: 'Menu',
-          tabBarIcon: ({ size, focused, color }: { size: number; focused: boolean; color: string }) => {
-            return (
-              <Image style={{ width: size, height: size }} source={Icons.menu} />
-            );
-          },
-        }}
-      />
+    
     </Tab.Navigator>
   );
 };

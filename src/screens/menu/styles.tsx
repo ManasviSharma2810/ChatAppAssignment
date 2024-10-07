@@ -5,7 +5,16 @@ export default StyleSheet.create({
     flex: 1,
     backgroundColor: '#e7edf3',
   },
-
+  lastMessageText: {
+    color: '#8e8e8e', 
+    fontSize: 14,
+    marginTop:5
+  },
+  timeText: {
+    color: '#8e8e8e', 
+    fontSize: 12,
+    alignSelf: 'flex-end',
+  },
   upper: {
     backgroundColor: '#2A7BBB',
     height: windowWidth > 400 ? 123 : 100,
@@ -42,6 +51,9 @@ export default StyleSheet.create({
     borderRadius: 8,
     padding: 16,
     flexDirection: 'row',
+  },
+  textInput:{
+paddingLeft:10
   },
   nochat: {
     flex: 1,
@@ -102,6 +114,10 @@ export default StyleSheet.create({
     color: '#fff', 
     fontWeight: 'bold', 
     fontSize: 18, 
+  },
+  chatDetails: {
+    flex: 1,
+    marginLeft: 10,
   },
   chatListItemText: {
     fontSize: 16,

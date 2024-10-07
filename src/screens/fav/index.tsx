@@ -1,19 +1,19 @@
 import React, {useState, useEffect} from 'react';
 import {GiftedChat, IMessage} from 'react-native-gifted-chat';
+import styles from './styles';
 
 import {
   View,
   Text,
   FlatList,
   ListRenderItem,
-  StyleSheet,
   TextInput,
   TouchableOpacity,
   Image,
 } from 'react-native';
 import usersData from '../../assets/users.json';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {Icons, Images} from '../../assets';
+import {Images} from '../../assets';
 import {NavigationProp} from '@react-navigation/native';
 interface User {
   id: number;
@@ -24,14 +24,11 @@ interface User {
 interface favprops {
   navigation: NavigationProp<any>;
 }
-
 const ChatScreen: React.FC<favprops> = ({navigation}) => {
   const [messages, setMessages] = useState<IMessage[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
- 
-
   useEffect(() => {
     setUsers(usersData.users);
     setFilteredUsers(usersData.users);
@@ -48,16 +45,13 @@ const ChatScreen: React.FC<favprops> = ({navigation}) => {
       },
     ]);
   }, []);
-
   const onSend = (newMessages: IMessage[] = []) => {
     setMessages(previousMessages =>
       GiftedChat.append(previousMessages, newMessages),
     );
   };
-
   const handleSearch = (query: string) => {
     setSearchQuery(query);
-
     if (query.trim() === '') {
       setFilteredUsers(users);
     } else {
@@ -69,13 +63,11 @@ const ChatScreen: React.FC<favprops> = ({navigation}) => {
       setFilteredUsers(filtered);
     }
   };
-
   const getInitials = (firstName: string, lastName: string) => {
     return `${firstName.charAt(0).toUpperCase()}${lastName
       .charAt(0)
       .toUpperCase()}`;
   };
-
   const handleChatRoom = (item: any) => {
     navigation.navigate('ChatRoom', {
       firstName: item.firstName,
@@ -132,101 +124,6 @@ const ChatScreen: React.FC<favprops> = ({navigation}) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  chatContainer: {
-    flex: 1,
-    justifyContent: 'space-between',
-  },
-  searchView: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 15,
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    elevation: 2,
-    marginHorizontal: 10,
-  },
-  searchBar: {
-    flex: 1,
-    height: 40,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingLeft: 10,
-    backgroundColor: '#fff',
-  },
-  backArrow: {
-    width: 20,
-    height: 20,
-    marginRight: 10,
-  },
-  userList: {
-    paddingBottom: 20,
-  },
-  userContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-    backgroundColor: '#fff',
-  },
-  initialsContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#007BFF',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 15,
-  },
-  initialsText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 18,
-  },
-  userInfo: {
-    flex: 1,
-  },
-  userName: {
-    fontWeight: 'bold',
-    fontSize: 16,
-    color: '#333',
-  },
-  userPhone: {
-    fontSize: 14,
-    color: '#666',
-  },
-  backButton: {
-    backgroundColor: '#007BFF',
-    padding: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-    margin: 10,
-    borderRadius: 8,
-  },
-  backButtonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-  },
-  noContactsContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  noContactsText: {
-    fontSize: 18,
-    color: '#666',
-  },
-  rImage: {
-    height: '30%',
-    width: '50%',
-  },
-  
-});
+
 
 export default ChatScreen;

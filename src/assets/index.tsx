@@ -5,6 +5,8 @@ const Images ={
     backArrow :require('../assets/Images/backArrow.png'),
     result :require('../assets/Images/resultImage.png'),
     splashImage:require('../assets/Images/splash.png'),
+    deleteModal:require('../assets/Images/modalDelete.png'),
+    send:require('../assets/Images/send.png'),
     
 }
 const Icons={

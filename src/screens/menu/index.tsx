@@ -1,19 +1,38 @@
-
-
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Text, TextInput, Image, TouchableOpacity, Modal, TouchableWithoutFeedback, FlatList } from 'react-native';
-import { NavigationProp } from '@react-navigation/native';
+import React, {useState, useEffect} from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  Image,
+  TouchableOpacity,
+  Modal,
+  TouchableWithoutFeedback,
+  FlatList,
+} from 'react-native';
+import {NavigationProp, useIsFocused} from '@react-navigation/native';
 import styles from './styles';
-import { Images } from '../../assets';
+import {Images} from '../../assets';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+interface User {
+  firstName: string;
+  lastName: string;
+  lastMessage: string;
+  lastMessageTime: string;
+}
+const formatTime = (timestamp: string) => {
+  const date = new Date(timestamp);
+  return date.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+};
 interface MenuProps {
   navigation: NavigationProp<any>;
 }
 
-const Menu: React.FC<MenuProps> = ({ navigation }) => {
+const Menu: React.FC<MenuProps> = ({navigation}) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [chattedUsers, setChattedUsers] = useState([]);
+  const [chattedUsers, setChattedUsers] = useState<User[]>([]);
+  const isFocused = useIsFocused();
+  const [searchText, setSearchText] = useState('');
 
   useEffect(() => {
     const fetchChattedUsers = async () => {
@@ -28,7 +47,7 @@ const Menu: React.FC<MenuProps> = ({ navigation }) => {
     };
 
     fetchChattedUsers();
-  }, []);
+  }, [isFocused]);
 
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
@@ -38,6 +57,11 @@ const Menu: React.FC<MenuProps> = ({ navigation }) => {
     toggleModal();
     navigation.navigate('UserList');
   };
+  const filteredUsers = chattedUsers.filter(user =>
+    `${user.firstName} ${user.lastName}`
+      .toLowerCase()
+      .includes(searchText.toLowerCase()),
+  );
 
   return (
     <View style={styles.container}>
@@ -46,10 +70,10 @@ const Menu: React.FC<MenuProps> = ({ navigation }) => {
           <Text style={styles.location}>Messages</Text>
           <Text style={styles.sub2}>{chattedUsers.length} Contacts</Text>
         </View>
-        <TouchableOpacity   onPress={() => {
-   
-      navigation.navigate('UserList');
-  }}>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('UserList');
+          }}>
           <Image source={Images.addChat} style={styles.img3} />
         </TouchableOpacity>
       </View>
@@ -57,10 +81,15 @@ const Menu: React.FC<MenuProps> = ({ navigation }) => {
       <View style={styles.lower}>
         <View style={styles.input}>
           <Image source={Images.search} />
-          <TextInput placeholder="Search messages..." />
+          <TextInput
+            style={styles.textInput}
+            placeholder="Search messages..."
+            value={searchText}
+            onChangeText={setSearchText}
+          />
         </View>
 
-        {chattedUsers.length === 0 ? (
+        {filteredUsers.length === 0 ? (
           <View style={styles.nochat}>
             <Image style={styles.nochatimg} source={Images.chat} />
             <Text>No chats, yet!</Text>
@@ -70,38 +99,52 @@ const Menu: React.FC<MenuProps> = ({ navigation }) => {
           </View>
         ) : (
           <FlatList
-            data={chattedUsers}
+            data={filteredUsers}
             keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item }) => (
+            renderItem={({item}) => (
               <TouchableOpacity
-              onPress={() => navigation.navigate('ChatRoom', { firstName: item.firstName, lastName: item.lastName })}
-            >
-              <View style={styles.chatListItem}>
-                {/* Circle with initials */}
-                <View style={styles.initialsCircle}>
-                  <Text style={styles.initialsText}>
-                    {item.firstName.charAt(0)}{item.lastName.charAt(0)}
-                  </Text>
+                onPress={() =>
+                  navigation.navigate('ChatRoom', {
+                    firstName: item.firstName,
+                    lastName: item.lastName,
+                  })
+                }>
+                <View style={styles.chatListItem}>
+                  <View style={styles.initialsCircle}>
+                    <Text style={styles.initialsText}>
+                      {item.firstName.charAt(0)}
+                      {item.lastName.charAt(0)}
+                    </Text>
+                  </View>
+
+                  <View style={styles.chatDetails}>
+                    <Text style={styles.chatListItemText}>
+                      {item.firstName} {item.lastName}
+                    </Text>
+                    <Text style={styles.lastMessageText}>
+                      You:{' '}
+                      {item.lastMessage ? item.lastMessage : 'No messages yet'}
+                    </Text>
+                  </View>
+
+                  <View>
+                    <Text style={styles.timeText}>
+                      {item.lastMessageTime
+                        ? formatTime(item.lastMessageTime)
+                        : ''}
+                    </Text>
+                  </View>
                 </View>
-            
-                {/* Full name */}
-                <Text style={styles.chatListItemText}>
-                  {item.firstName} {item.lastName}
-                </Text>
-              </View>
-            </TouchableOpacity>
-            
+              </TouchableOpacity>
             )}
           />
         )}
       </View>
-
       <Modal
         transparent={true}
         visible={isModalVisible}
         animationType="slide"
-        onRequestClose={toggleModal}
-      >
+        onRequestClose={toggleModal}>
         <TouchableWithoutFeedback onPress={toggleModal}>
           <View style={styles.modalContainer}>
             <TouchableWithoutFeedback>
@@ -121,9 +164,4 @@ const Menu: React.FC<MenuProps> = ({ navigation }) => {
   );
 };
 
-
-
 export default Menu;
-
-
-
