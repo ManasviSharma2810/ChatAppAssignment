@@ -271,8 +271,8 @@ const Gifted: React.FC = () => {
             icon: Icons.reply,
           },
           {label: 'Copy', onPress: copyMessage, icon: Icons.copy},
-          {label: 'Star', onPress: () => Alert.alert('Star'), icon: Icons.fav},
-          {label: 'Edit', onPress: () => Alert.alert('Edit'), icon: Icons.edit},
+          {label: 'Star', onPress: () => {}, icon: Icons.fav},
+          {label: 'Edit', onPress: () => {}, icon: Icons.edit},
           {label: 'Delete', onPress: deleteMessage, icon: Icons.delete},
         ]}
         onClose={closeMessageModal}
